@@ -16,11 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // App State
     let apiKey = localStorage.getItem('gemini-api-key');
-    let conversations = JSON.parse(localStorage.getItem('gemini-conversations')) || {};
-    let currentConversationId = localStorage.getItem('gemini-current-conversation-id') || null;
-    let masks = JSON.parse(localStorage.getItem('gemini-masks')) || {};
-    let currentMaskId = localStorage.getItem('gemini-current-mask-id') || 'default';
-    const model = "gemini-1.5-flash-001";
+    let currentConversation = [];
+    let allConversations = JSON.parse(localStorage.getItem('gemini-conversations')) || {};
+    let currentConversationId = null;
+    const model = "gemini-2.5-flash";
     const maxOutputTokens = 4000;
 
     // Initialization
