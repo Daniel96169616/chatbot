@@ -22,14 +22,22 @@
 
         <!-- Chat Interface -->
         <div id="chat-interface" class="hidden">
-            <div class="chat-container">
-                <div id="chat-history">
-                    <!-- Messages will be appended here -->
+            <div id="sidebar">
+                <button id="new-chat-button">+ 新對話</button>
+                <div id="conversation-history">
+                    <!-- Conversation history will be populated here -->
                 </div>
             </div>
-            <div class="input-area">
-                <input type="text" id="message-input" placeholder="輸入訊息...">
-                <button id="send-button">傳送</button>
+            <div class="main-chat">
+                <div class="chat-container">
+                    <div id="chat-history">
+                        <!-- Messages will be appended here -->
+                    </div>
+                </div>
+                <div class="input-area">
+                    <input type="text" id="message-input" placeholder="輸入訊息...">
+                    <button id="send-button">傳送</button>
+                </div>
             </div>
         </div>
     </div>

@@ -92,13 +92,71 @@ html, body {
 #chat-interface {
     width: 100%;
     height: 100%;
-    max-width: 800px;
+    max-width: 1100px; /* Increased max-width for sidebar */
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Changed to row for sidebar layout */
     background-color: var(--container-bg);
     border-radius: 12px;
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+}
+
+#sidebar {
+    width: 260px;
+    background-color: #e9ecef;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+}
+
+#new-chat-button {
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+#new-chat-button:hover {
+    background-color: #357abd;
+}
+
+#conversation-history {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.conversation-item {
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s;
+}
+
+.conversation-item:hover {
+    background-color: #dce1e6;
+}
+
+.conversation-item.active {
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+}
+
+
+.main-chat {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .chat-container {
