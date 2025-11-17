@@ -20,19 +20,38 @@
             </div>
         </div>
 
-        <!-- Chat Interface -->
-        <div id="chat-interface" class="hidden">
-            <div class="chat-container">
-                <div id="chat-history">
-                    <!-- Messages will be appended here -->
+        <!-- Main Content -->
+        <div id="main-content" class="hidden">
+            <!-- Sidebar -->
+            <div id="sidebar">
+                <button id="new-chat-button">+ 新對話</button>
+                <div id="conversation-history-list">
+                    <!-- Conversation history will be appended here -->
                 </div>
             </div>
-            <div class="input-area">
-                <input type="text" id="message-input" placeholder="輸入訊息...">
-                <button id="send-button">傳送</button>
+
+            <!-- Chat Interface -->
+            <div id="chat-interface">
+                <div id="chat-header">
+                    <select id="mask-select"></select>
+                    <button id="add-mask-button">＋</button>
+                </div>
+                <div class="chat-container">
+                    <div id="chat-history">
+                        <!-- Messages will be appended here -->
+                    </div>
+                </div>
+                <div class="input-area">
+                    <input type="text" id="message-input" placeholder="輸入訊息...">
+                    <button id="send-button">傳送</button>
+                </div>
+                <div id="suggested-questions">
+                    <!-- Suggested questions will be appended here -->
+                </div>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
