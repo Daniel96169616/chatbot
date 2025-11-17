@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('main-content');
     const apiKeyInput = document.getElementById('api-key-input');
     const saveApiKeyButton = document.getElementById('save-api-key');
-    const chatHistoryEl = document.getElementById('chat-history');
+    const chatHistory = document.getElementById('chat-history');
     const messageInput = document.getElementById('message-input');
     const sendButton = document.getElementById('send-button');
     const newChatButton = document.getElementById('new-chat-button');
@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const init = () => {
         if (apiKey) {
             showChatInterface();
-            loadConversationHistory();
-            loadMostRecentConversation();
         } else {
             showApiKeySetup();
         }
@@ -38,7 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') sendMessage();
         });
         newChatButton.addEventListener('click', createNewChat);
-        addMaskButton.addEventListener('click', addMask);
+        addMaskButton.addEventListener('click', () => {
+            addMask().then(() => {
+                // Mask creation is complete
+            });
+        });
         maskSelect.addEventListener('change', (e) => switchMask(e.target.value));
 
         initializeMasks();
@@ -141,85 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return messageElement;
     };
 
-    // Start a new chat
-    const startNewChat = () => {
-        currentConversationId = `conversation_${Date.now()}`;
-        currentConversation = [];
-        chatHistoryEl.innerHTML = '';
-        messageInput.value = '';
-        // A new chat doesn't exist in the history yet, so no item can be active.
-        // The active item will be set when the first message is sent.
-        const items = conversationHistoryEl.querySelectorAll('.conversation-item');
-        items.forEach(item => item.classList.remove('active'));
-    };
-
-    // Load the most recent conversation, or start a new one if none exist
-    const loadMostRecentConversation = () => {
-        const sortedIds = Object.keys(allConversations).sort((a, b) => parseInt(b.split('_')[1]) - parseInt(a.split('_')[1]));
-        if (sortedIds.length > 0) {
-            loadConversation(sortedIds[0]);
-        } else {
-            startNewChat();
-        }
-    };
-
-    // Load a specific conversation
-    const loadConversation = (id) => {
-        if (!allConversations[id]) return;
-        currentConversationId = id;
-        currentConversation = allConversations[id];
-        chatHistoryEl.innerHTML = '';
-        currentConversation.forEach(msg => {
-            // Check for the correct role property
-            const role = msg.role === 'model' ? 'ai' : 'user';
-            const text = msg.parts && msg.parts.length > 0 ? msg.parts[0].text : '';
-            if (text) {
-                addMessageToUI(role, text);
-            }
-        });
-        updateActiveConversationItem();
-    };
-
-
-    // Save conversations to local storage
-    const saveConversations = () => {
-        allConversations[currentConversationId] = currentConversation;
-        localStorage.setItem('gemini-conversations', JSON.stringify(allConversations));
-    };
-
-    // Update the visual state of the active conversation item
-    const updateActiveConversationItem = () => {
-        const items = conversationHistoryEl.querySelectorAll('.conversation-item');
-        items.forEach(item => {
-            if (item.dataset.conversationId === currentConversationId) {
-                item.classList.add('active');
-            } else {
-                item.classList.remove('active');
-            }
-        });
-    };
-
-    // Load conversation history from storage and display it
-    const loadConversationHistory = () => {
-        conversationHistoryEl.innerHTML = '';
-        const sortedIds = Object.keys(allConversations).sort((a, b) => b.split('_')[1] - a.split('_')[1]); // Sort by timestamp desc
-        sortedIds.forEach(id => {
-            const conversation = allConversations[id];
-            if (conversation.length > 0) {
-                const firstUserMessage = conversation.find(msg => msg.role === 'user');
-                const title = firstUserMessage ? firstUserMessage.parts[0].text.substring(0, 30) + '...' : '新對話';
-
-                const item = document.createElement('div');
-                item.classList.add('conversation-item');
-                item.textContent = title;
-                item.dataset.conversationId = id;
-                item.addEventListener('click', () => loadConversation(id));
-                conversationHistoryEl.appendChild(item);
-            }
-        });
-        updateActiveConversationItem();
-    };
-
     // Send Message
     const sendMessage = async (messageText = null) => {
         if (messageText === null) {
@@ -227,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!messageText || !currentConversationId) return;
 
-        addMessageToUI('user', messageText);
+        addMessage('user', messageText);
         messageInput.value = '';
         suggestedQuestionsContainer.innerHTML = ''; // Clear suggestions
 
@@ -239,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderConversationHistory();
         }
 
-        const loadingIndicator = addMessageToUI('ai', '思考中...');
+        const loadingIndicator = addMessage('ai', '思考中...');
         loadingIndicator.classList.add('loading');
 
         try {
@@ -267,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const aiResponse = data.candidates[0].content.parts[0].text;
 
             loadingIndicator.remove();
-            addMessageToUI('ai', aiResponse);
+            addMessage('ai', aiResponse);
 
             currentHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
             conversations[currentConversationId].timestamp = Date.now();
@@ -279,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             loadingIndicator.textContent = `錯誤: ${error.message}`;
             console.error('API Error:', error);
-            // No need to save here, as the user message is already saved.
         }
     };
 
