@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentConversation = [];
     let allConversations = JSON.parse(localStorage.getItem('gemini-conversations')) || {};
     let currentConversationId = null;
-    const model = "gemini-1.5-flash-latest";
+    const model = "gemini-2.5-flash";
     const maxOutputTokens = 4000;
 
     // Initialization
