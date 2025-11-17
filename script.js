@@ -37,11 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') sendMessage();
         });
         newChatButton.addEventListener('click', createNewChat);
-        addMaskButton.addEventListener('click', () => {
-            addMask().then(() => {
-                // Mask creation is complete
-            });
-        });
+        addMaskButton.addEventListener('click', addMask);
         maskSelect.addEventListener('change', (e) => switchMask(e.target.value));
 
         initializeMasks();
